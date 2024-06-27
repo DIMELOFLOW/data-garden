@@ -13,7 +13,7 @@ const NextButton = () => (
     <button className="next-button">NEXT</button>
   </div>
 );
-// TODO: remove
+
 const BackButton = () => (
   <div className="container">
     <Link href="/">
