@@ -1,26 +1,25 @@
 import { FC } from "react";
-import Link from 'next/link';
-
+import Link from "next/link";
 
 const UploadContainer = () => (
-    <div className="upload-container">
-        <input type="file" />
-    </div>
+  <div className="upload-container">
+    <input type="file" />
+  </div>
 );
 
 const NextButton = () => (
-    <div className="container">
-      <link rel="stylesheet" href="" />
-      <button className="next-button">NEXT</button>
-    </div>
+  <div className="container">
+    <link rel="stylesheet" href="" />
+    <button className="next-button">NEXT</button>
+  </div>
 );
-
+// TODO: remove
 const BackButton = () => (
-    <div className="container">
-      <Link href="/">
+  <div className="container">
+    <Link href="/">
       <button className="next-button">BACK</button>
-      </Link>
-    </div>
+    </Link>
+  </div>
 );
 
 const UploadPage: FC = () => {
@@ -30,7 +29,7 @@ const UploadPage: FC = () => {
         <UploadContainer />
       </div>
       <div className="containerButton">
-        <BackButton /> 
+        <BackButton />
         <NextButton />
       </div>
     </>
@@ -38,12 +37,3 @@ const UploadPage: FC = () => {
 };
 
 export default UploadPage;
-
-
-
-
-
-
-
-
-
