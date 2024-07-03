@@ -1,9 +1,7 @@
-// format Csv
 const csvData = `nombre,edad,ciudad
 Juan,25,Madrid
 Ana,30,Barcelona`;
 
-// convert CSV a JSON
 function getCsvToJson(csvString: string): any[] {
     const records = csvString.split('\n');
     const headers = records[0].split(',');
@@ -17,8 +15,6 @@ function getCsvToJson(csvString: string): any[] {
     });
     return data;
   }
-  
-  // show result
+
   const jsonData = getCsvToJson(csvData);
-  console.log(csvData);
-  console.log(jsonData);
+ 

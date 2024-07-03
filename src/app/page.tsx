@@ -1,9 +1,8 @@
 'use client'
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { FC } from "react";
-import { useEffect } from 'react';
+import { useState, FC, useEffect } from 'react';
+
 
 type ButtonContainerPropsLeft = {
   onLeftButtonClick: () => void;
@@ -15,7 +14,7 @@ type ButtonContainerPropsRight = {
   onSelectFormat: (format: string) => void;
 };
 
-const ButtonContainerLeft = ({ onLeftButtonClick, onSelectFormat }: ButtonContainerPropsLeft) => (
+const ButtonContainerLeft: FC<ButtonContainerPropsLeft> = ({ onLeftButtonClick, onSelectFormat }) => (
   <div className="button-container-left">
     <button onClick={() => { onLeftButtonClick(); onSelectFormat('CSV'); }}>CSV</button>
     <button onClick={() => { onLeftButtonClick(); onSelectFormat('JSON'); }}>JSON</button>
@@ -23,7 +22,7 @@ const ButtonContainerLeft = ({ onLeftButtonClick, onSelectFormat }: ButtonContai
   </div>
 );
 
-const ButtonContainerRight = ({ onRightButtonClick, onSelectFormat }: ButtonContainerPropsRight) => (
+const ButtonContainerRight: FC<ButtonContainerPropsRight> = ({ onRightButtonClick, onSelectFormat }) => (
   <div className="button-container-right">
     <button onClick={() => { onRightButtonClick(); onSelectFormat('JSON'); }}>JSON</button>
     <button onClick={() => { onRightButtonClick(); onSelectFormat('CSV'); }}>CSV</button>
@@ -58,10 +57,12 @@ const YourComponent: FC = () => {
 
   const handleFormatSelectionLeft = (format: string) => {
     setSelectedFormatLeft(format);
+    localStorage.setItem('selectedFormatLeft', format);
   }
 
   const handleFormatSelectionRight = (format: string) => {
     setSelectedFormatRight(format);
+    
   }
 
   // useEffect(() => {
