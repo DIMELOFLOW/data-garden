@@ -1,8 +1,7 @@
-'use client'
+"use client";
 
-import Link from 'next/link';
-import { useState, FC, useEffect } from 'react';
-
+import Link from "next/link";
+import { useState, FC } from "react";
 
 type ButtonContainerPropsLeft = {
   onLeftButtonClick: () => void;
@@ -14,27 +13,76 @@ type ButtonContainerPropsRight = {
   onSelectFormat: (format: string) => void;
 };
 
-const ButtonContainerLeft: FC<ButtonContainerPropsLeft> = ({ onLeftButtonClick, onSelectFormat }) => (
+const ButtonContainerLeft: FC<ButtonContainerPropsLeft> = ({
+  onLeftButtonClick,
+  onSelectFormat,
+}) => (
   <div className="button-container-left">
-    <button onClick={() => { onLeftButtonClick(); onSelectFormat('CSV'); }}>CSV</button>
-    <button onClick={() => { onLeftButtonClick(); onSelectFormat('JSON'); }}>JSON</button>
-    <button onClick={() => { onLeftButtonClick(); onSelectFormat('JSONL'); }}>JSONL</button>
+    <button
+      onClick={() => {
+        onLeftButtonClick();
+        onSelectFormat("CSV");
+      }}
+    >
+      CSV
+    </button>
+    <button
+      onClick={() => {
+        onLeftButtonClick();
+        onSelectFormat("JSON");
+      }}
+    >
+      JSON
+    </button>
+    <button
+      onClick={() => {
+        onLeftButtonClick();
+        onSelectFormat("JSONL");
+      }}
+    >
+      JSONL
+    </button>
   </div>
 );
 
-const ButtonContainerRight: FC<ButtonContainerPropsRight> = ({ onRightButtonClick, onSelectFormat }) => (
+const ButtonContainerRight: FC<ButtonContainerPropsRight> = ({
+  onRightButtonClick,
+  onSelectFormat,
+}) => (
   <div className="button-container-right">
-    <button onClick={() => { onRightButtonClick(); onSelectFormat('JSON'); }}>JSON</button>
-    <button onClick={() => { onRightButtonClick(); onSelectFormat('CSV'); }}>CSV</button>
-    <button onClick={() => { onRightButtonClick(); onSelectFormat('JSONL'); }}>JSONL</button>
+    <button
+      onClick={() => {
+        onRightButtonClick();
+        onSelectFormat("JSON");
+      }}
+    >
+      JSON
+    </button>
+    <button
+      onClick={() => {
+        onRightButtonClick();
+        onSelectFormat("CSV");
+      }}
+    >
+      CSV
+    </button>
+    <button
+      onClick={() => {
+        onRightButtonClick();
+        onSelectFormat("JSONL");
+      }}
+    >
+      JSONL
+    </button>
   </div>
 );
 
 const NextButton = ({ isDisabled }: { isDisabled: boolean }) => (
   <div className="container">
-
-    <Link href="/uploadPage">
-      <button className='next-button' disabled={isDisabled} >NEXT</button>
+    <Link href="/upload-page">
+      <button className="next-button" disabled={isDisabled}>
+        NEXT
+      </button>
     </Link>
   </div>
 );
@@ -42,8 +90,8 @@ const NextButton = ({ isDisabled }: { isDisabled: boolean }) => (
 const YourComponent: FC = () => {
   const [leftButtonPressed, setLeftButtonPressed] = useState(false);
   const [rightButtonPressed, setRightButtonPressed] = useState(false);
-  const [selectedFormatLeft, setSelectedFormatLeft] = useState<string | null>(null);
-  const [selectedFormatRight, setSelectedFormatRight] = useState<string | null>(null);
+  const [, setSelectedFormatLeft] = useState<string | null>(null);
+  const [, setSelectedFormatRight] = useState<string | null>(null);
 
   const handleLeftButtonClick = () => {
     setLeftButtonPressed(true);
@@ -57,24 +105,24 @@ const YourComponent: FC = () => {
 
   const handleFormatSelectionLeft = (format: string) => {
     setSelectedFormatLeft(format);
-    localStorage.setItem('selectedFormatLeft', format);
-  }
+    localStorage.setItem("selectedFormatLeft", format);
+  };
 
   const handleFormatSelectionRight = (format: string) => {
     setSelectedFormatRight(format);
-    
-  }
-
-  // useEffect(() => {
-  //   console.log("Formato seleccionado derecho:", selectedFormatLeft);
-  //   console.log("Formato seleccionado izquierdo:", selectedFormatRight);
-  // }, [selectedFormatLeft, selectedFormatRight]); // observe changes
+  };
 
   return (
     <>
       <div className="container">
-        <ButtonContainerLeft onLeftButtonClick={handleLeftButtonClick} onSelectFormat={handleFormatSelectionLeft} />
-        <ButtonContainerRight onRightButtonClick={handleRightButtonClick} onSelectFormat={handleFormatSelectionRight} />
+        <ButtonContainerLeft
+          onLeftButtonClick={handleLeftButtonClick}
+          onSelectFormat={handleFormatSelectionLeft}
+        />
+        <ButtonContainerRight
+          onRightButtonClick={handleRightButtonClick}
+          onSelectFormat={handleFormatSelectionRight}
+        />
       </div>
       <NextButton isDisabled={!isNextButtonEnabled} />
     </>
