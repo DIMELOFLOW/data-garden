@@ -1,14 +1,11 @@
 import { FC } from "react";
 import Link from "next/link";
 
-const UploadContainer = () => (
-  <div className="upload-container">
-    <input type="file" />
-  </div>
-);
+import { UploadFiles } from "./components/";
 
 const NextButton = () => (
   <div className="container">
+    {/* TODO: Should use Next Link ? */}
     <link rel="stylesheet" href="" />
     <button className="next-button">NEXT</button>
   </div>
@@ -26,7 +23,7 @@ const UploadPage: FC = () => {
   return (
     <>
       <div className="container">
-        <UploadContainer />
+        <UploadFiles />
       </div>
       <div className="containerButton">
         <BackButton />
