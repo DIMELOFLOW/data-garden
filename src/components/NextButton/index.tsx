@@ -8,8 +8,16 @@ interface NextButtonProps {
 
 export const NextButton: React.FC<NextButtonProps> = ({ disabled = false }) => (
   <div className="container">
-    <Button className="next-button" variant="contained" disabled={disabled}>
-      <Link href="/upload-page">NEXT</Link>
-    </Button>
+    {disabled ? (
+      <Button className="next-button" variant="contained" disabled>
+        NEXT
+      </Button>
+    ) : (
+      <Link href="/upload-page">
+        <Button className="next-button" variant="contained">
+          NEXT
+        </Button>
+      </Link>
+    )}
   </div>
 );

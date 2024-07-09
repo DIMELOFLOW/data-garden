@@ -1,21 +1,21 @@
 "use client";
 
 import React, { FC, useState, useEffect } from "react";
-import styled from "styled-components";
 
-const FormatButtonStyled: FC<{ checked: boolean }> = styled.button`
-  background: ${(props) => (props.checked ? "#15297c" : "black")};
-  &:hover {
-    background-color: #107acc;
-  }
-`;
+import { ButtonStyled } from "./components";
 
-export const FormatButton: FC<{
+type IProps = {
   text: string;
   format: string;
   handleClick: (format: string) => void;
   selectedFormat?: string | null;
-}> = ({ text, format, handleClick, selectedFormat }) => {
+};
+export const FormatButton: FC<IProps> = ({
+  text,
+  format,
+  handleClick,
+  selectedFormat,
+}) => {
   const [checked, setChecked] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,15 +27,16 @@ export const FormatButton: FC<{
   }, [selectedFormat, format]);
 
   return (
-    <FormatButtonStyled
+    <ButtonStyled
       {...{
         checked,
+        variant: "contained",
         onClick: () => {
           handleClick(format);
         },
       }}
     >
       {text}
-    </FormatButtonStyled>
+    </ButtonStyled>
   );
 };

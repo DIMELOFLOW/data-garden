@@ -10,6 +10,7 @@ import {
 const YourComponent: FC = () => {
   const [, setLeftButtonPressed] = useState(false);
   const [, setRightButtonPressed] = useState(false);
+
   const [selectedFormatLeft, setSelectedFormatLeft] = useState<string | null>(
     null
   );
@@ -42,12 +43,11 @@ const YourComponent: FC = () => {
     localStorage.setItem(storageKey, format);
   };
 
-  const isValidSelection = (): boolean => {
-    return selectedFormatLeft !== null && selectedFormatRight !== null;
-  };
+  const isValidSelection =
+    selectedFormatLeft !== null && selectedFormatRight !== null;
 
   const isNextButtonEnabled =
-    isValidSelection() &&
+    isValidSelection &&
     ((selectedFormatLeft === "application/json" &&
       selectedFormatRight === "CSV") ||
       (selectedFormatLeft === "CSV" &&
