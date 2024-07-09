@@ -24,12 +24,12 @@ export const UnifiedButtonContainer: FC<IProps> = ({
       {Object.entries({
         CSV: "CSV",
         "application/json": "JSON",
-      }).map(([keyFormat, value], i) => (
+      }).map(([, value], i) => (
         <FormatButton
           key={i}
-          format={keyFormat}
+          format={value}
           text={value}
-          handleClick={() => onHandleButtonClick(keyFormat)}
+          handleClick={() => onHandleButtonClick(value)}
           selectedFormat={selectedFormat}
         />
       ))}

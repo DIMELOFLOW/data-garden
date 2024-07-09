@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, FC } from "react";
+import { useState, FC, useEffect } from "react";
 import {
   NextButton,
   DataInstructions,
   UnifiedButtonContainer,
 } from "@components";
+import { Constants } from "@helpers";
 
+const { FILE_FORMATS } = Constants;
 const YourComponent: FC = () => {
-  const [, setLeftButtonPressed] = useState(false);
-  const [, setRightButtonPressed] = useState(false);
+  const [, setLeftButtonPressed] = useState<boolean>(false);
+  const [, setRightButtonPressed] = useState<boolean>(false);
+  const [isNextButtonEnabled, setIsNextButtonEnabled] =
+    useState<boolean>(false);
 
   const [selectedFormatLeft, setSelectedFormatLeft] = useState<string | null>(
     null
@@ -17,6 +21,20 @@ const YourComponent: FC = () => {
   const [selectedFormatRight, setSelectedFormatRight] = useState<string | null>(
     null
   );
+
+  useEffect(() => {
+    const isValidSelection =
+      selectedFormatLeft !== null && selectedFormatRight !== null;
+
+    const selectedValidFormat =
+      isValidSelection &&
+      ((selectedFormatLeft === FILE_FORMATS.JSON &&
+        selectedFormatRight === FILE_FORMATS.CSV) ||
+        (selectedFormatLeft === FILE_FORMATS.CSV &&
+          selectedFormatRight === FILE_FORMATS.JSON));
+
+    setIsNextButtonEnabled(selectedValidFormat);
+  }, [selectedFormatLeft, selectedFormatRight]);
 
   const handleLeftButtonClick = () => {
     setLeftButtonPressed(true);
@@ -43,16 +61,6 @@ const YourComponent: FC = () => {
     localStorage.setItem(storageKey, format);
   };
 
-  const isValidSelection =
-    selectedFormatLeft !== null && selectedFormatRight !== null;
-
-  const isNextButtonEnabled =
-    isValidSelection &&
-    ((selectedFormatLeft === "application/json" &&
-      selectedFormatRight === "CSV") ||
-      (selectedFormatLeft === "CSV" &&
-        selectedFormatRight === "application/json"));
-
   return (
     <>
       <div className="title">
@@ -60,20 +68,20 @@ const YourComponent: FC = () => {
       </div>
       <div className="container">
         <UnifiedButtonContainer
-          side="right"
-          onButtonClick={handleRightButtonClick}
-          onSelectFormat={(format) => handleFormatSelection(format, "right")}
-          selectedFormat={selectedFormatRight}
-        />
-        <UnifiedButtonContainer
           side="left"
           onButtonClick={handleLeftButtonClick}
           onSelectFormat={(format) => handleFormatSelection(format, "left")}
           selectedFormat={selectedFormatLeft}
         />
+        <UnifiedButtonContainer
+          side="right"
+          onButtonClick={handleRightButtonClick}
+          onSelectFormat={(format) => handleFormatSelection(format, "right")}
+          selectedFormat={selectedFormatRight}
+        />
       </div>
       <DataInstructions />
-      <NextButton disabled={!isNextButtonEnabled} />
+      <NextButton path="/upload-page" disabled={!isNextButtonEnabled} />
     </>
   );
 };
