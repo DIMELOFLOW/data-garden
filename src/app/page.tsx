@@ -8,7 +8,8 @@ import {
 } from "@components";
 import { Constants } from "@helpers";
 
-const { FILE_FORMATS } = Constants;
+const { FILE_FORMATS, FILE_SELECTED_FORMATS, FILE_SIDES } = Constants;
+
 const YourComponent: FC = () => {
   const [, setLeftButtonPressed] = useState<boolean>(false);
   const [, setRightButtonPressed] = useState<boolean>(false);
@@ -44,21 +45,21 @@ const YourComponent: FC = () => {
     setRightButtonPressed(true);
   };
 
-  const handleFormatSelection = (format: string, side: "left" | "right") => {
-    const oppositeSideSelectedFormat =
-      side === "left" ? selectedFormatRight : selectedFormatLeft;
-
-    if (oppositeSideSelectedFormat === format) {
-      return alert("You cannot select the same format on both sides");
+  const handleFormatSelection = (format: string, side: "left"   | "right") => {
+    const currentSideFormat = side === FILE_SIDES.LEFT ? selectedFormatLeft : selectedFormatRight;
+    const oppositeSideFormat = side === FILE_SIDES.LEFT ? selectedFormatRight : selectedFormatLeft;
+  
+    if (currentSideFormat === format && oppositeSideFormat === format) {
+      const otherSideUpdateFunction = side === FILE_SIDES.LEFT ? setSelectedFormatRight : setSelectedFormatLeft;
+      const otherSideStorageKey = side === FILE_SIDES.LEFT ? FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT : FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT;
+      otherSideUpdateFunction(null);
+      localStorage.removeItem(otherSideStorageKey);
+    } else {
+      const updateFunction = side === FILE_SIDES.LEFT ? setSelectedFormatLeft : setSelectedFormatRight;
+      const storageKey = side === FILE_SIDES.LEFT ? FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT : FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT
+      updateFunction(format);
+      localStorage.setItem(storageKey, format);
     }
-
-    const updateFunction =
-      side === "left" ? setSelectedFormatLeft : setSelectedFormatRight;
-    const storageKey =
-      side === "left" ? "selectedFormatLeft" : "selectedFormatRight";
-
-    updateFunction(format);
-    localStorage.setItem(storageKey, format);
   };
 
   return (

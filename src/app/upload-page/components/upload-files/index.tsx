@@ -1,10 +1,14 @@
 "use client";
 
 import { ChangeEvent, FC, useRef } from "react";
+import { Constants } from "@helpers";
+
+const { FILE_SELECTED_FORMATS } = Constants;
 
 type IProps = {
   onHandleValidFile: () => void;
 };
+
 export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -31,7 +35,7 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
       "application/json": "JSON",
     };
 
-    const retrievedFileType = localStorage.getItem("selectedFormatLeft");
+    const retrievedFileType = localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT);
     const isRightFormatType =
       fileTypeMap[file.type as keyof typeof fileTypeMap] !== retrievedFileType;
 
