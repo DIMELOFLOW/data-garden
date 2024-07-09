@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
-import { FormatButton } from '../FormatButton';
+import React, { FC } from "react";
+import { FormatButton } from "../FormatButton";
 
-type UnifiedButtonContainerProps = {
-  side: 'left' | 'right';
+type IProps = {
+  side: "left" | "right";
   onButtonClick: () => void;
   onSelectFormat: (format: string) => void;
-  selectedFormat: string; 
+  selectedFormat: string | null;
 };
 
-const UnifiedButtonContainer: FC<UnifiedButtonContainerProps> = ({
+export const UnifiedButtonContainer: FC<IProps> = ({
   side,
   onButtonClick,
   onSelectFormat,
@@ -36,5 +36,3 @@ const UnifiedButtonContainer: FC<UnifiedButtonContainerProps> = ({
     </div>
   );
 };
-
-export default UnifiedButtonContainer;

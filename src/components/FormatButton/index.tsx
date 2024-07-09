@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState, useEffect} from "react";
+import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 
 const FormatButtonStyled: FC<{ checked: boolean }> = styled.button`
@@ -14,10 +14,10 @@ export const FormatButton: FC<{
   text: string;
   format: string;
   handleClick: (format: string) => void;
-  selectedFormat?: string;
+  selectedFormat?: string | null;
 }> = ({ text, format, handleClick, selectedFormat }) => {
   const [checked, setChecked] = useState<boolean>(false);
-  
+
   useEffect(() => {
     if (selectedFormat === format) {
       setChecked(true);
