@@ -2,7 +2,10 @@
 
 import { ChangeEvent, FC, useRef } from "react";
 
-export const UploadFiles: FC = () => {
+type IProps = {
+  onHandleValidFile: () => void;
+};
+export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   const fileInput = useRef<HTMLInputElement>(null);
 
   const onHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +41,8 @@ export const UploadFiles: FC = () => {
       }
       return alert(`File should be type ${retrievedFileType}`);
     }
+
+    onHandleValidFile();
   };
 
   return (
