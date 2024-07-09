@@ -1,97 +1,22 @@
 "use client";
 
-import Link from "next/link";
 import { useState, FC } from "react";
-
-type ButtonContainerPropsLeft = {
-  onLeftButtonClick: () => void;
-  onSelectFormat: (format: string) => void;
-};
-
-type ButtonContainerPropsRight = {
-  onRightButtonClick: () => void;
-  onSelectFormat: (format: string) => void;
-};
-
-const ButtonContainerLeft: FC<ButtonContainerPropsLeft> = ({
-  onLeftButtonClick,
-  onSelectFormat,
-}) => (
-  <div className="button-container-left">
-    <button
-      onClick={() => {
-        onLeftButtonClick();
-        onSelectFormat("CSV");
-      }}
-    >
-      CSV
-    </button>
-    <button
-      onClick={() => {
-        onLeftButtonClick();
-        onSelectFormat("JSON");
-      }}
-    >
-      JSON
-    </button>
-    <button
-      onClick={() => {
-        onLeftButtonClick();
-        onSelectFormat("JSONL");
-      }}
-    >
-      JSONL
-    </button>
-  </div>
-);
-
-const ButtonContainerRight: FC<ButtonContainerPropsRight> = ({
-  onRightButtonClick,
-  onSelectFormat,
-}) => (
-  <div className="button-container-right">
-    <button
-      onClick={() => {
-        onRightButtonClick();
-        onSelectFormat("JSON");
-      }}
-    >
-      JSON
-    </button>
-    <button
-      onClick={() => {
-        onRightButtonClick();
-        onSelectFormat("CSV");
-      }}
-    >
-      CSV
-    </button>
-    <button
-      onClick={() => {
-        onRightButtonClick();
-        onSelectFormat("JSONL");
-      }}
-    >
-      JSONL
-    </button>
-  </div>
-);
-
-const NextButton = ({ isDisabled }: { isDisabled: boolean }) => (
-  <div className="container">
-    <Link href="/upload-page">
-      <button className="next-button" disabled={isDisabled}>
-        NEXT
-      </button>
-    </Link>
-  </div>
-);
+import {
+  NextButton,
+  DataInstructions,
+  UnifiedButtonContainer,
+} from "@components";
 
 const YourComponent: FC = () => {
-  const [leftButtonPressed, setLeftButtonPressed] = useState(false);
-  const [rightButtonPressed, setRightButtonPressed] = useState(false);
-  const [, setSelectedFormatLeft] = useState<string | null>(null);
-  const [, setSelectedFormatRight] = useState<string | null>(null);
+  const [, setLeftButtonPressed] = useState(false);
+  const [, setRightButtonPressed] = useState(false);
+
+  const [selectedFormatLeft, setSelectedFormatLeft] = useState<string | null>(
+    null
+  );
+  const [selectedFormatRight, setSelectedFormatRight] = useState<string | null>(
+    null
+  );
 
   const handleLeftButtonClick = () => {
     setLeftButtonPressed(true);
@@ -101,30 +26,54 @@ const YourComponent: FC = () => {
     setRightButtonPressed(true);
   };
 
-  const isNextButtonEnabled = leftButtonPressed && rightButtonPressed;
+  const handleFormatSelection = (format: string, side: "left" | "right") => {
+    const oppositeSideSelectedFormat =
+      side === "left" ? selectedFormatRight : selectedFormatLeft;
 
-  const handleFormatSelectionLeft = (format: string) => {
-    setSelectedFormatLeft(format);
-    localStorage.setItem("selectedFormatLeft", format);
+    if (oppositeSideSelectedFormat === format) {
+      return alert("You cannot select the same format on both sides");
+    }
+
+    const updateFunction =
+      side === "left" ? setSelectedFormatLeft : setSelectedFormatRight;
+    const storageKey =
+      side === "left" ? "selectedFormatLeft" : "selectedFormatRight";
+
+    updateFunction(format);
+    localStorage.setItem(storageKey, format);
   };
 
-  const handleFormatSelectionRight = (format: string) => {
-    setSelectedFormatRight(format);
-  };
+  const isValidSelection =
+    selectedFormatLeft !== null && selectedFormatRight !== null;
+
+  const isNextButtonEnabled =
+    isValidSelection &&
+    ((selectedFormatLeft === "application/json" &&
+      selectedFormatRight === "CSV") ||
+      (selectedFormatLeft === "CSV" &&
+        selectedFormatRight === "application/json"));
 
   return (
     <>
+      <div className="title">
+        <h1>Transform Your Data Into Action</h1>
+      </div>
       <div className="container">
-        <ButtonContainerLeft
-          onLeftButtonClick={handleLeftButtonClick}
-          onSelectFormat={handleFormatSelectionLeft}
+        <UnifiedButtonContainer
+          side="right"
+          onButtonClick={handleRightButtonClick}
+          onSelectFormat={(format) => handleFormatSelection(format, "right")}
+          selectedFormat={selectedFormatRight}
         />
-        <ButtonContainerRight
-          onRightButtonClick={handleRightButtonClick}
-          onSelectFormat={handleFormatSelectionRight}
+        <UnifiedButtonContainer
+          side="left"
+          onButtonClick={handleLeftButtonClick}
+          onSelectFormat={(format) => handleFormatSelection(format, "left")}
+          selectedFormat={selectedFormatLeft}
         />
       </div>
-      <NextButton isDisabled={!isNextButtonEnabled} />
+      <DataInstructions />
+      <NextButton disabled={!isNextButtonEnabled} />
     </>
   );
 };
