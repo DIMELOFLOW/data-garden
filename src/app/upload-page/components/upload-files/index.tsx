@@ -2,11 +2,12 @@
 
 import { ChangeEvent, FC, useRef } from "react";
 import { Constants } from "@helpers";
+import { getJsonToCsv, getCsvToJson } from "../format-conversion";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
 type IProps = {
-  onHandleValidFile: () => void;
+  onHandleValidFile: (data: any) => void;
 };
 
 export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
@@ -19,7 +20,6 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
     }
 
     const [file]: File[] = Array.from(existFiles) ?? ([] as File[]);
-
     const bytesToMb = 1024 * 1024;
     const isGreaterThan100Mb = file.size / bytesToMb > 100;
 
@@ -33,9 +33,12 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
     const fileTypeMap = {
       csv: "CSV",
       "application/json": "JSON",
+      "text/csv": "CSV",
     };
 
-    const retrievedFileType = localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT);
+    const retrievedFileType = localStorage.getItem(
+      FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT
+    );
     const isRightFormatType =
       fileTypeMap[file.type as keyof typeof fileTypeMap] !== retrievedFileType;
 
@@ -46,7 +49,37 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
       return alert(`File should be type ${retrievedFileType}`);
     }
 
-    onHandleValidFile();
+    let data: any;
+
+    try {
+      if (file.type === "text/csv") {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const handleCsvLoad = async () => {
+            const csvData = reader.result as string;
+            data = getCsvToJson(csvData);
+          };
+          handleCsvLoad();
+        };
+        reader.readAsText(file);
+      } else if (file.type === "application/json") {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const handleJsonLoad = async () => {
+            const jsonData = reader.result as string;
+            const jsonObject = JSON.parse(jsonData);
+            data = getJsonToCsv(jsonObject);
+          };
+          handleJsonLoad();
+        };
+        reader.readAsText(file);
+      }
+    } catch (error) {
+      console.error("Error converting file:", error);
+      return alert("Failed to convert file");
+    }
+
+    onHandleValidFile(data);
   };
 
   return (
