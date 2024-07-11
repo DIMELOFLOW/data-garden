@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FC, useRef } from "react";
 import { Constants } from "@helpers";
-import { getJsonToCsv, getCsvToJson } from "../format-conversion";
+import { getCsvToJson, getJsonToCsv } from "../../libs/format-conversion";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
