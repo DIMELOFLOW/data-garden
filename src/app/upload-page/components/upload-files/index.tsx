@@ -1,8 +1,8 @@
 "use client";
 
-import { ChangeEvent, FC, useRef } from "react";
+import { ChangeEvent, FC, useRef, useState } from "react";
 import { Constants } from "@helpers";
-import { getCsvToJson, getJsonToCsv } from "../../libs/format-conversion";
+import { getCsvToJson, getJsonToCsv, downloadFile } from "../../libs/format-conversion";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
@@ -12,6 +12,7 @@ type IProps = {
 
 export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   const fileInput = useRef<HTMLInputElement>(null);
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
 
   const onHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const existFiles = e.target.files;
@@ -58,6 +59,9 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
           const handleCsvLoad = async () => {
             const csvData = reader.result as string;
             data = getCsvToJson(csvData);
+            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            setDataUrl(url);
           };
           handleCsvLoad();
         };
@@ -68,7 +72,10 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
           const handleJsonLoad = async () => {
             const jsonData = reader.result as string;
             const jsonObject = JSON.parse(jsonData);
-            data = getJsonToCsv(jsonObject);
+            data = getJsonToCsv(jsonObject);     
+            const blob = new Blob([data], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            setDataUrl(url);
           };
           handleJsonLoad();
         };
@@ -85,6 +92,11 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   return (
     <div className="upload-container">
       <input type="file" onChange={onHandleChange} ref={fileInput} />
+      {dataUrl && (
+        <button onClick={() => downloadFile(dataUrl)}
+        >Descargar Archivo                     
+        </button>
+      )}
     </div>
   );
 };

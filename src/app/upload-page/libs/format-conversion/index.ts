@@ -20,3 +20,11 @@ export function getCsvToJson(csvString: string): any[] {
     return data;
 }
 
+export function downloadFile(dataUrl: any) {
+  const link = document.createElement('a') ;
+  link.href = dataUrl;
+  link.setAttribute('download', 'converted');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
