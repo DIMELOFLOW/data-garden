@@ -1,8 +1,9 @@
 "use client";
 
-import { ChangeEvent, FC, useRef, useState } from "react";
+import { ChangeEvent, FC, useContext, useRef } from "react";
 import { Constants } from "@helpers";
-import { getCsvToJson, getJsonToCsv, downloadFile } from "../../libs/format-conversion";
+import { getCsvToJson, getJsonToCsv, } from "../../libs/format-conversion";
+import { FileUrlContext } from "@/context/FileUrlContext";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
@@ -12,7 +13,8 @@ type IProps = {
 
 export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   const fileInput = useRef<HTMLInputElement>(null);
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const  {dataUrl, setDataUrl} = useContext(FileUrlContext);
+  
 
   const onHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const existFiles = e.target.files;
@@ -61,7 +63,9 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
             data = getCsvToJson(csvData);
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            setDataUrl(url);
+            setDataUrl(url)
+            console.log(dataUrl)
+            
           };
           handleCsvLoad();
         };
@@ -71,11 +75,16 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
         reader.onload = () => {
           const handleJsonLoad = async () => {
             const jsonData = reader.result as string;
-            const jsonObject = JSON.parse(jsonData);
-            data = getJsonToCsv(jsonObject);     
+            const jsonObject = [JSON.parse(jsonData)];
+          
+            data = getJsonToCsv(jsonObject);  
+            console.log(data)
             const blob = new Blob([data], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
-            setDataUrl(url);
+            console.log(url)
+            setDataUrl(url)
+            console.log(dataUrl)
+            
           };
           handleJsonLoad();
         };
@@ -92,11 +101,11 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   return (
     <div className="upload-container">
       <input type="file" onChange={onHandleChange} ref={fileInput} />
-      {dataUrl && (
+      {/* {dataUrl && (
         <button onClick={() => downloadFile(dataUrl)}
         >Descargar Archivo                     
         </button>
-      )}
+      )} */}
     </div>
   );
 };

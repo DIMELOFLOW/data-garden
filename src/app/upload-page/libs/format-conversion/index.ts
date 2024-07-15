@@ -1,8 +1,11 @@
-export function getJsonToCsv(jsonData: Record<string, any>): string {
-    const keys = Object.keys(jsonData);
-    const csvRows = keys.map((key) => `${key},${jsonData[key]}`);
-    const csvData = csvRows.join("\n");
-    return csvData;
+export function getJsonToCsv(jsonData: any[]): string{
+  const keys = Object.keys(jsonData[0]).join(",");
+  let csvContent = `${keys}\n`;
+  jsonData.forEach((row) => {
+      const values = Object.values(row).join(",");
+      csvContent += `${values}\n`;
+  });
+  return csvContent;
 }
 
 export function getCsvToJson(csvString: string): any[] {
