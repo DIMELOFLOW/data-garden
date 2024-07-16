@@ -14,8 +14,15 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-
   margin-bottom: 4rem;
+}
+
+.contain {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: -4rem;
 }
 
 .title {
@@ -60,3 +67,18 @@ button {
 .next-button {
   width: 10rem;
 }
+
+.iconFile {
+  height: 15rem;
+  width: 15rem;
+}
+
+.iconFiles {
+  height: 10rem;
+  width: 10rem;
+}
+
+.containerIconFile {
+  margin-bottom: 2rem;
+}
+

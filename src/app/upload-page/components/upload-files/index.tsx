@@ -13,14 +13,13 @@ type IProps = {
   setHowAlreadyLoad: () => void;
 };
 
-// TODO: FROM: El archivo que quiere el usuario fromFIle
 export const UploadFiles: FC<IProps> = ({
   onHandleValidFile,
   setHowLoading,
   setHowAlreadyLoad,
 }) => {
   const fileInput = useRef<HTMLInputElement>(null);
-  const { , setDataUrl } = useFileUrlContext();
+  const { setDataUrl } = useFileUrlContext();
 
   const onHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const existFiles = e.target.files;
@@ -42,6 +41,11 @@ export const UploadFiles: FC<IProps> = ({
     const retrievedFileType = localStorage.getItem(
       FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT
     );
+
+    const retrievedFileTypeRight = localStorage.getItem(
+      FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT
+    );
+   
     const isRightFormatType =
       fileTypeMap[file.type as keyof typeof fileTypeMap] !== retrievedFileType;
 
@@ -54,13 +58,12 @@ export const UploadFiles: FC<IProps> = ({
 
     let data: any;
 
-    // TODO: No puede ser a lo malandro
     const fromFile = "CSV";
     setHowLoading();
     transformFile(
       file,
       fileTypeMap[file.type as keyof typeof fileTypeMap] as FileType,
-      fromFile as FileType
+      retrievedFileTypeRight as FileType
     )
       .transformFileToBlob()
       .then((url) => {
@@ -79,11 +82,6 @@ export const UploadFiles: FC<IProps> = ({
   return (
     <div className="upload-container">
       <input type="file" onChange={onHandleChange} ref={fileInput} />
-      {/* {dataUrl && (
-        <button onClick={() => downloadFile(dataUrl)}
-        >Descargar Archivo                     
-        </button>
-      )} */}
     </div>
   );
 };

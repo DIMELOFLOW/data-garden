@@ -2,13 +2,10 @@
 
 import Link from "next/link";
 import { FC, useState } from "react";
-import Button from "@mui/material/Button";
 
+import Button from "@mui/material/Button";
 import { NextButton } from "@components";
 import { UploadFiles } from "./components/";
-import { downloadFile } from "./libs/format-conversion";
-
-import { useFileUrlContext } from "@/context/FileUrlContext";
 
 const BackButton = () => (
   <div className="container">
@@ -23,8 +20,6 @@ const BackButton = () => (
 const UploadPage: FC = () => {
   const [validFile, setValidFile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const { dataUrl } = useFileUrlContext();
 
   const onHandleValidFile = () => setValidFile(true);
   const setHowLoading = () => setLoading(true);
@@ -46,9 +41,8 @@ const UploadPage: FC = () => {
 
         <NextButton
           {...{
-            path: " ",
+            path: "/ready-file",
             disabled: !validFile || loading,
-            onClick: () => downloadFile(dataUrl),
           }}
         />
       </div>
