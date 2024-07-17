@@ -39,7 +39,7 @@ export function getJSONFromCSV(
 export function downloadFile(dataUrl: any, fileType: string | null) {
   const link = document.createElement("a");
   link.href = dataUrl;
-  link.setAttribute("download", `converted.${fileType}` );
+  link.setAttribute("download", `converted.${fileType?.toLowerCase()}` );
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
