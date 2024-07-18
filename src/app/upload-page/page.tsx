@@ -1,16 +1,27 @@
 "use client";
 
+import { FC, useEffect, useState } from "react";
+
 import Link from "next/link";
-import { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Button from "@mui/material/Button";
 import { NextButton } from "@components";
 import { UploadFiles } from "./components/";
+import { Constants } from "@helpers";
+
+const { FILE_SELECTED_FORMATS } = Constants;
+
+function clearLocalStorageKey(): void {
+  if (typeof window.localStorage !== 'undefined') {
+    window.localStorage.clear();
+  }
+}
 
 const BackButton = () => (
   <div className="container">
     <Link href="/">
-      <Button variant="outlined" color="warning">
+      <Button variant="outlined" color="warning" onClick={ () => clearLocalStorageKey()}>
         BACK
       </Button>
     </Link>
@@ -20,6 +31,13 @@ const BackButton = () => (
 const UploadPage: FC = () => {
   const [validFile, setValidFile] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if(!localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT) || !localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT)) {
+      router.push('/')
+    }
+    }, []); 
 
   const onHandleValidFile = () => setValidFile(true);
   const setHowLoading = () => setLoading(true);
