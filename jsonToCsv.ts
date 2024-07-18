@@ -1,3 +1,6 @@
+export type Literal = boolean | null | number | string;
+export type JSONValue = Literal | { [key: string]: JSONValue } | JSONValue[];
+
 const jsonDatas = [
   { name: "Juan", age: 25, city: "Madrid" },
   { name: "Ana", age: 30, city: "Barcelona" },

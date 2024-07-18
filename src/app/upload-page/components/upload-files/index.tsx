@@ -1,18 +1,25 @@
 "use client";
 
-import { ChangeEvent, FC, useRef, useState } from "react";
+import { ChangeEvent, FC, useRef } from "react";
 import { Constants } from "@helpers";
-import { getCsvToJson, getJsonToCsv, downloadFile } from "../../libs/format-conversion";
+import { useFileUrlContext } from "@/context/FileUrlContext";
+import { FileType, fileTypeMap, transformFile } from "./services";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
 type IProps = {
   onHandleValidFile: (data: any) => void;
+  setHowLoading: () => void;
+  setHowAlreadyLoad: () => void;
 };
 
-export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
+export const UploadFiles: FC<IProps> = ({
+  onHandleValidFile,
+  setHowLoading,
+  setHowAlreadyLoad,
+}) => {
   const fileInput = useRef<HTMLInputElement>(null);
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const { setDataUrl } = useFileUrlContext();
 
   const onHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const existFiles = e.target.files;
@@ -31,15 +38,14 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
       return alert("File size should be less than 100Mb");
     }
 
-    const fileTypeMap = {
-      csv: "CSV",
-      "application/json": "JSON",
-      "text/csv": "CSV",
-    };
-
     const retrievedFileType = localStorage.getItem(
       FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT
     );
+
+    const retrievedFileTypeRight = localStorage.getItem(
+      FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT
+    );
+   
     const isRightFormatType =
       fileTypeMap[file.type as keyof typeof fileTypeMap] !== retrievedFileType;
 
@@ -52,39 +58,23 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
 
     let data: any;
 
-    try {
-      if (file.type === "text/csv") {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const handleCsvLoad = async () => {
-            const csvData = reader.result as string;
-            data = getCsvToJson(csvData);
-            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            setDataUrl(url);
-          };
-          handleCsvLoad();
-        };
-        reader.readAsText(file);
-      } else if (file.type === "application/json") {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const handleJsonLoad = async () => {
-            const jsonData = reader.result as string;
-            const jsonObject = JSON.parse(jsonData);
-            data = getJsonToCsv(jsonObject);     
-            const blob = new Blob([data], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            setDataUrl(url);
-          };
-          handleJsonLoad();
-        };
-        reader.readAsText(file);
-      }
-    } catch (error) {
-      console.error("Error converting file:", error);
-      return alert("Failed to convert file");
-    }
+    const fromFile = "CSV";
+    setHowLoading();
+    transformFile(
+      file,
+      fileTypeMap[file.type as keyof typeof fileTypeMap] as FileType,
+      retrievedFileTypeRight as FileType
+    )
+      .transformFileToBlob()
+      .then((url) => {
+        setDataUrl(url);
+        setHowAlreadyLoad();
+      })
+      .catch((error) => {
+        setHowAlreadyLoad();
+        console.error("Error converting file:", error);
+        return alert("Failed to convert file");
+      });
 
     onHandleValidFile(data);
   };
@@ -92,11 +82,6 @@ export const UploadFiles: FC<IProps> = ({ onHandleValidFile }) => {
   return (
     <div className="upload-container">
       <input type="file" onChange={onHandleChange} ref={fileInput} />
-      {dataUrl && (
-        <button onClick={() => downloadFile(dataUrl)}
-        >Descargar Archivo                     
-        </button>
-      )}
     </div>
   );
 };
