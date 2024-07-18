@@ -5,20 +5,21 @@ import Avatar from '@mui/material/Avatar';
 import FolderIcon from '@mui/icons-material/Folder';
 import Button from "@mui/material/Button";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link"; 
 
 import { downloadFile } from "../upload-page/libs/format-conversion";
 import { Constants } from "@helpers";
 import { useFileUrlContext } from "@/context/FileUrlContext";
+import { useCheckLocalStorageAndRedirect, useClearLocalStorage } from "@/hooks/checkLocalStorage";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
 export default function ReadyFile() {
   const { dataUrl } = useFileUrlContext();
-  const router = useRouter();
   const [selectedFormatRight, setSelectedFormatRight] = useState('');
   
+  useCheckLocalStorageAndRedirect();
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const rightFormat = window.localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT);
@@ -26,19 +27,7 @@ export default function ReadyFile() {
       setSelectedFormatRight(rightFormat || '');
     }
   }, []);
-
-  useEffect(() => {
-    if(!localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT) || !localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATLEFT)) {
-      router.push('/')
-    } 
-  }, []); 
-
-  function clearLocalStorageKey(): void {
-    if (typeof window.localStorage !== 'undefined') {
-      window.localStorage.clear();
-    }
-  }
-
+  
   return (
     <div className="contain">
       <div className="title">
@@ -55,7 +44,7 @@ export default function ReadyFile() {
             color="warning" 
             style={{ marginRight: '30px' }}
             onClick={ () => {
-              clearLocalStorageKey()
+              useClearLocalStorage()
             }}
           >
             START

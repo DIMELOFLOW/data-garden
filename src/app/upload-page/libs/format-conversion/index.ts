@@ -1,7 +1,3 @@
-// Define los tipos según tus especificaciones
-export type Literal = boolean | null | number | string;
-export type JSONValue = Literal | { [key: string]: JSONValue } | JSONValue[];
-
 export function getCSVFromJSON(jsonString: string): string {
   const jsonData: Array<Record<string, string>> = JSON.parse(jsonString);
 
@@ -36,7 +32,10 @@ export function getJSONFromCSV(
   });
 }
 
-export function downloadFile(dataUrl: any, fileType: string | null) {
+export function downloadFile(dataUrl: string | null, fileType: string | null) {
+  if (!dataUrl || !fileType) {
+    return; 
+  }
   const link = document.createElement("a");
   link.href = dataUrl;
   link.setAttribute("download", `converted.${fileType?.toLowerCase()}` );
