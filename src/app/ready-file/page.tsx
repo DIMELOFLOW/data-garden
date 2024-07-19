@@ -10,7 +10,7 @@ import Link from "next/link";
 import { downloadFile } from "../upload-page/libs/format-conversion";
 import { Constants } from "@helpers";
 import { useFileUrlContext } from "@/context/FileUrlContext";
-import { useCheckLocalStorageAndRedirect, useClearLocalStorage } from "@/hooks/checkLocalStorage";
+import { useCheckLocalStorageAndRedirect, clearLocalStorage } from "@/hooks/checkLocalStorage";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
@@ -23,7 +23,6 @@ export default function ReadyFile() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const rightFormat = window.localStorage.getItem(FILE_SELECTED_FORMATS.SELECTEDFORMATRIGHT);
-
       setSelectedFormatRight(rightFormat || '');
     }
   }, []);
@@ -43,9 +42,7 @@ export default function ReadyFile() {
           <Button variant="outlined" 
             color="warning" 
             style={{ marginRight: '30px' }}
-            onClick={ () => {
-              useClearLocalStorage()
-            }}
+            onClick={clearLocalStorage}
           >
             START
           </Button>
