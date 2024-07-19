@@ -15,10 +15,3 @@ export const useCheckLocalStorageAndRedirect = (): void => {
         }
       }, []);
 };
-
-export function useClearLocalStorage(): void {
-    if (typeof window.localStorage !== 'undefined') {
-      window.localStorage.clear();
-    }
-  }
-
