@@ -8,11 +8,12 @@ import Button from "@mui/material/Button";
 import Link from "next/link"; 
 
 import { downloadFile } from "../upload-page/libs/format-conversion";
-import { Constants } from "@helpers";
+import { Constants, localStorage } from "@helpers";
 import { useFileUrlContext } from "@/context/FileUrlContext";
-import { useCheckLocalStorageAndRedirect, clearLocalStorage } from "@/hooks/checkLocalStorage";
+import { useCheckLocalStorageAndRedirect } from "@/hooks/checkLocalStorage";
 
 const { FILE_SELECTED_FORMATS } = Constants;
+const { clearLocalStorage } = localStorage;
 
 export default function ReadyFile() {
   const { dataUrl } = useFileUrlContext();

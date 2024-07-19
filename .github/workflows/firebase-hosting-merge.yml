@@ -14,7 +14,12 @@ jobs:
       - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATA_GARDEN_F6930 }}
+          repoToken: ${{ secrets.MY_GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_PRIVATE_KEY }}
           channelId: live
           projectId: data-garden-f6930
+
+
+
+
+# firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DATA_GARDEN_F6930 }}

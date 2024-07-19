@@ -7,10 +7,11 @@ import Link from "next/link";
 import Button from "@mui/material/Button";
 import { NextButton } from "@components";
 import { UploadFiles } from "./components/";
-import { useCheckLocalStorageAndRedirect, clearLocalStorage } from "@/hooks/checkLocalStorage";
-import { Constants } from "@helpers";
+import { useCheckLocalStorageAndRedirect } from "@/hooks/checkLocalStorage";
+import { Constants, localStorage } from "@helpers";
 
 const { FILE_SELECTED_FORMATS } = Constants;
+const { clearLocalStorage } =localStorage;
 
 const BackButton = () => (
   <div className="container">
