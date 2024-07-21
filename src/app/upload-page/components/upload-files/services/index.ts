@@ -31,11 +31,11 @@ export const transformFile = (
   const mapFunction: MapFunction = {
     [FileType.CSV]: {
       [FileType.JSON]: getJSONFromCSV,
-      [FileType.CSV]: () => "",
+      [FileType.CSV]: (args: any) => args,
     },
     [FileType.JSON]: {
       [FileType.CSV]: getCSVFromJSON,
-      [FileType.JSON]: () => "",
+      [FileType.JSON]: (args: any) => args,
     },
   };
 
@@ -49,8 +49,7 @@ export const transformFile = (
         try {
           const fileData = reader.result as string;
           const data = mapFunction[fromFile][toBlob](fileData);
-
-          const blob = new Blob([JSON.stringify(data)], {
+          const blob = new Blob([data], {
             type: fileTypeMap[toBlob as unknown as keyof typeof fileTypeMap],
           });
           const url = URL.createObjectURL(blob);
