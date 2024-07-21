@@ -23,14 +23,16 @@ export function getJSONFromCSV(
   const headers = records[0].split(",");
   const bodyValues = records.slice(1);
 
-  const jsonArray = bodyValues.map((record) => {
-  const cleanedValues = record.split(",").map(value => value.replace(/[\r\n]/g, ""));
-  const obj: Record<string, string> = {};
-  headers.forEach((header, index) => {
-  obj[header] = cleanedValues[index];
-  });
+  const jsonArray = bodyValues.filter(record => record !== "") 
+  .map(record => {
+    const cleanedValues = record.split(",").map(value => value.trim());
+    const obj: Record<string, string> = {};
+    headers.forEach((header, index) => {
+      obj[header] = cleanedValues[index]; 
+    });
     return obj;
-  });
+  })
+  .filter(obj => Object.values(obj).some(value => value !== "")); 
 
   const jsonStr = JSON.stringify(jsonArray, null, 2);
   const encoder = new TextEncoder();
