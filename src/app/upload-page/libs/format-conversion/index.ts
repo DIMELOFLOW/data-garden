@@ -1,35 +1,42 @@
-export function getCSVFromJSON(jsonString: string): string {
-  const jsonData: Array<Record<string, string>> = JSON.parse(jsonString);
+export function getCSVFromJSON(jsonString: string): ArrayBuffer {
 
+  const jsonData: Array<Record<string, string>> = JSON.parse(jsonString);
   const keys = Object.keys(jsonData[0]).join(",");
-  let csvContent = `${keys}\n`;
+  let csvContent = `${keys}\r\n`;
 
   jsonData.forEach((row) => {
     const values = Object.values(row).join(",");
-    csvContent += `${values}\n`;
+    csvContent += `${values}\r\n`;
   });
-  return csvContent;
+  
+  const uint8array = new TextEncoder().encode(csvContent);
+  const arrayBufferOutput = uint8array.buffer;
+
+  return arrayBufferOutput;
 }
 
 export function getJSONFromCSV(
   csvString: string
-): Array<Record<string, string>> {
-  const records = csvString.split("\n");
-
+): ArrayBuffer {
+  
+  const records = csvString.split("\r\n");
   const headers = records[0].split(",");
   const bodyValues = records.slice(1);
 
-  return bodyValues.map((record) => {
-    const obj: Record<string, string> = {};
-    const values = record.split(",");
-
-    headers.forEach((header, index) => {
-      let cleanValue = values[index].replace(/\r\n|\n|\r/g, "");
-      obj[header] = cleanValue;
-    });
-
+  const jsonArray = bodyValues.map((record) => {
+  const cleanedValues = record.split(",").map(value => value.replace(/[\r\n]/g, ""));
+  const obj: Record<string, string> = {};
+  headers.forEach((header, index) => {
+  obj[header] = cleanedValues[index];
+  });
     return obj;
   });
+
+  const jsonStr = JSON.stringify(jsonArray, null, 2);
+  const encoder = new TextEncoder();
+  const arrayBuffer = encoder.encode(jsonStr);
+  
+  return arrayBuffer
 }
 
 export function downloadFile(dataUrl: string | null, fileType: string | null) {
