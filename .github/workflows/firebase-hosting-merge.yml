@@ -18,12 +18,10 @@ jobs:
       - run: npm i
       - run: npm run build
       - run: npm run export
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.MY_GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_PRIVATE_KEY }}
-          channelId: live
-          projectId: data-garden-f6930
+      - name: Deploy to Firebase Hosting
+      env:
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      run: npm run deploy
      
       
 
