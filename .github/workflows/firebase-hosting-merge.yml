@@ -20,7 +20,7 @@ jobs:
       - run: npm run export
       - name: Deploy to Firebase Hosting
       env:
-      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - run: npm run deploy
      
       
