@@ -17,11 +17,10 @@ jobs:
           node-version: '18'
       - run: npm i
       - run: npm run build
-      - run: npm run export
       - name: Deploy to Firebase Hosting
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      - run: npm run deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: npm run deploy
      
       
 
