@@ -11,14 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+      - run: npm i
+      - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.MY_GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_PRIVATE_KEY }}
           channelId: live
           projectId: data-garden-f6930
-      - run: npm i
-      - run: npm run build
      
       
 
