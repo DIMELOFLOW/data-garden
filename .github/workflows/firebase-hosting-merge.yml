@@ -15,13 +15,13 @@ jobs:
       - uses: actions/setup-node@v2
         with: 
           node-version: '18'
-      - run: npm i
+      - run: npm ci
       - run: npm run build
       - run: npm run export
       - name: Deploy to Firebase Hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      - run: npm run deploy
+        run: npm run deploy
      
       
 
