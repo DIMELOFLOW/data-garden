@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-color: #FDFBF6;
+  background-color: #fdfbf6;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -33,11 +33,11 @@ body {
 }
 
 .title h1 {
-  text-align: left; 
-  font-family:'Times New Roman', Times, serif;
-  font-size: 35px; 
-  COLOR: #1278BF; 
-  text-shadow: 0px 0px 9px #508AD3;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 35px;
+  color: #1278bf;
+  /* text-shadow: 0px 0px 9px #508AD3; */
 }
 
 .containerButton {
@@ -81,4 +81,3 @@ button {
 .containerIconFile {
   margin-bottom: 2rem;
 }
-
