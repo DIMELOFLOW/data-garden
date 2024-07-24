@@ -1,4 +1,4 @@
-import { json2csv } from 'json-2-csv';
+import { json2csv, csv2json } from 'json-2-csv';
 
 export async function getCSVFromJSON(jsonData: string) {
 
@@ -8,29 +8,14 @@ export async function getCSVFromJSON(jsonData: string) {
   return csv
 };
 
-export function getJSONFromCSV(csvString: string): ArrayBuffer {
-  
-  const records = csvString.split("\r\n");
-  const headers = records[0].split(",");
-  const bodyValues = records.slice(1);
+export async function getJSONFromCSV(csvString: string) {
 
-  const jsonArray = bodyValues.filter(record => record !== "") 
-  .map(record => {
-    const cleanedValues = record.split(",").map(value => value.trim());
-    const obj: Record<string, string> = {};
-    headers.forEach((header, index) => {
-      obj[header] = cleanedValues[index]; 
-    });
-    return obj;
-  })
-  .filter(obj => Object.values(obj).some(value => value !== "")); 
+  const INDENTATION_LEVEL = 2;
+  const json = await csv2json(csvString)
+  const jsonString = JSON.stringify(json, null, INDENTATION_LEVEL);
 
-  const jsonStr = JSON.stringify(jsonArray, null, 2);
-  const encoder = new TextEncoder();
-  const arrayBuffer = encoder.encode(jsonStr);
-  
-  return arrayBuffer
-}
+  return jsonString
+};
 
 export function downloadFile(dataUrl: string | null, fileType: string | null) {
   if (!dataUrl || !fileType) {
