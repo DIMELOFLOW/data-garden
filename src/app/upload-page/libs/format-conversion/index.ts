@@ -1,19 +1,18 @@
-export function getCSVFromJSON(jsonString: string): ArrayBuffer {
+import { Parser } from 'json2csv';
 
-  const jsonData: Array<Record<string, string>> = JSON.parse(jsonString);
-  const keys = Object.keys(jsonData[0]).join(",");
-  let csvContent = `${keys}\r\n`;
-
-  jsonData.forEach((row) => {
-    const values = Object.values(row).join(",");
-    csvContent += `${values}\r\n`;
-  });
+export function getCSVFromJSON(jsonString: string,): ArrayBuffer {
   
-  const uint8array = new TextEncoder().encode(csvContent);
-  const arrayBufferOutput = uint8array.buffer;
+  const jsonData = JSON.parse(jsonString);
 
-  return arrayBufferOutput;
-}
+  const parser = new Parser({header: true});
+
+  let csvData = parser.parse(jsonData);
+  csvData = csvData.replace(/"/g, '');
+
+  const encoder = new TextEncoder();
+  const arrayBufferOutput = encoder.encode(csvData);
+  return arrayBufferOutput
+};
 
 export function getJSONFromCSV(
   csvString: string
