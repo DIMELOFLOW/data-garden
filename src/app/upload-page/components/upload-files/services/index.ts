@@ -45,10 +45,15 @@ export const transformFile = (
     return new Promise((resolve, reject) => {
       reader.readAsText(file);
 
-      reader.onload = () => {
+      reader.onload = async () => {
         try {
           const fileData = reader.result as string;
-          const data = mapFunction[fromFile][toBlob](fileData);
+          let data: string | ArrayBuffer;
+          if (mapFunction[fromFile][toBlob] instanceof Function) {
+            data = await mapFunction[fromFile][toBlob](fileData);
+          } else {
+            data = fileData; 
+          }
           const blob = new Blob([data], {
             type: fileTypeMap[toBlob as unknown as keyof typeof fileTypeMap],
           });
