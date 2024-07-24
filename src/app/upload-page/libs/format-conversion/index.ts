@@ -1,5 +1,7 @@
 import { json2csv, csv2json } from 'json-2-csv';
 
+const INDENTATION_LEVEL = 2; 
+
 export async function getCSVFromJSON(jsonData: string) {
 
   const object = JSON.parse(jsonData)
@@ -11,7 +13,7 @@ export async function getCSVFromJSON(jsonData: string) {
 export async function getJSONFromCSV(csvString: string) {
 
   const json = await csv2json(csvString)
-  const jsonString = JSON.stringify(json, null, 2);
+  const jsonString = JSON.stringify(json, null, INDENTATION_LEVEL);
 
   return jsonString
 };
