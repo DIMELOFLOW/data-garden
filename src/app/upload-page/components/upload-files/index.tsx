@@ -4,6 +4,7 @@ import { ChangeEvent, FC, useRef } from "react";
 import { Constants } from "@helpers";
 import { useFileUrlContext } from "@/context/FileUrlContext";
 import { FileType, fileTypeMap, transformFile } from "./services";
+import { useDataArchiveContext } from "@/context/DataArchiveContext";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 
@@ -20,6 +21,7 @@ export const UploadFiles: FC<IProps> = ({
 }) => {
   const fileInput = useRef<HTMLInputElement>(null);
   const { setDataUrl } = useFileUrlContext();
+  const { setDataArchive } = useDataArchiveContext();
 
   const onHandleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const existFiles = e.target.files;
@@ -66,8 +68,9 @@ export const UploadFiles: FC<IProps> = ({
       retrievedFileTypeRight as FileType
     )
       .transformFileToBlob()
-      .then((url) => {
+      .then(({ url, data }) => {
         setDataUrl(url);
+        setDataArchive(data)
         setHowAlreadyLoad();
       })
       .catch((error) => {

@@ -41,7 +41,8 @@ export const transformFile = (
 
   const reader = new FileReader();
 
-  const transformFileToBlob = async (): Promise<string> => {
+  const transformFileToBlob = async (): Promise<{ url: string; data: string | ArrayBuffer }> => {
+
     return new Promise((resolve, reject) => {
       reader.readAsText(file);
 
@@ -58,7 +59,7 @@ export const transformFile = (
             type: fileTypeMap[toBlob as unknown as keyof typeof fileTypeMap],
           });
           const url = URL.createObjectURL(blob);
-          resolve(url);
+          resolve({url, data});
         } catch (error) {
           reject(error);
         }

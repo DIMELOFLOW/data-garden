@@ -1,4 +1,5 @@
 import { json2csv, csv2json } from 'json-2-csv';
+import { Constants } from "@helpers";
 
 export async function getCSVFromJSON(jsonData: string) {
 
@@ -10,9 +11,8 @@ export async function getCSVFromJSON(jsonData: string) {
 
 export async function getJSONFromCSV(csvString: string) {
 
-  const INDENTATION_LEVEL = 2;
   const json = await csv2json(csvString)
-  const jsonString = JSON.stringify(json, null, INDENTATION_LEVEL);
+  const jsonString = JSON.stringify(json, null, Constants.INDENTATION_LEVEL);
 
   return jsonString
 };

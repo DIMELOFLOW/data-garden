@@ -15,3 +15,5 @@ export const FILE_SIDES = {
   LEFT: "left",
   RIGHT: "right",
 }
+
+export const INDENTATION_LEVEL = 2

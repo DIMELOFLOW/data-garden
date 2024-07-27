@@ -1,0 +1,53 @@
+.containerMapData {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containerLeftRight {
+    display: flex;
+    height: 95%;
+    width: inherit;
+}
+
+.containerLeft, .containerRight {
+    flex: 1;
+    overflow: hidden;
+}
+
+.containerLeft {
+    border-right: 1px solid #ccc;
+}
+
+.contentLeftRight {
+    overflow-y: auto;
+    padding: 0 2rem;
+    height: inherit;
+    margin-bottom: 2rem;
+    box-sizing: border-box
+}
+
+.titlee {
+    text-align: left;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 35px;
+    color: #1278bf;
+    margin-bottom: 2rem;
+}
+
+.archiveContainer {
+    max-width: 100%; 
+    overflow-y: auto;
+    height: 70vh;
+    white-space: pre-wrap;
+}
+
+.archiveContainer pre {
+    word-break: break-all;
+    font-size: 14px;
+    margin: 0;
+    padding: 10px;
+}
+
