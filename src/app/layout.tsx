@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <DataArchiveContextProvider>
-        <FileUrlContextProvider>{children}</FileUrlContextProvider>
+          <FileUrlContextProvider>{children}</FileUrlContextProvider>
         </DataArchiveContextProvider>
       </body>
     </html>
