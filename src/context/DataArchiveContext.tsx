@@ -17,7 +17,7 @@ export const useDataArchiveContext = (): DataContextType => {
   const context = useContext(DataArchiveContext);
   if (context === undefined) {
     throw new Error(
-      "useDataArchiveContext must be used within a DataArchiveContextProvider"
+      "It looks like you're trying to use 'useDataArchiveContext' outside of its expected scope. Make sure you wrap your component with <DataArchiveContextProvider>"
     );
   }
   return context;

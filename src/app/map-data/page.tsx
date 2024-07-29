@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import {
   getHeadersWithTypesCsv,
   getHeadersWithTypesJson,
-} from "./libs/extract-Patterns";
+} from "./libs/extract-pattern";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 const { clearLocalStorage } = localStorage;
@@ -43,9 +43,8 @@ const pageMapData: FC = () => {
 
     if (!dataArchive) {
       router.push("/");
-    }
-
-    if (dataArchive) {
+      return;
+    } else {
       const displayContent =
         dataArchive instanceof ArrayBuffer
           ? convertArrayBufferToString(dataArchive)
