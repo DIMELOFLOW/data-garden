@@ -17,7 +17,7 @@ const { clearLocalStorage } = localStorage;
 
 const buttonDisable = false;
 
-const pageMapData: FC = () => {
+const PageMapData: FC = () => {
   const { dataArchive, setDataArchive } = useDataArchiveContext();
   const [selectedFormatRight, setSelectedFormatRight] = useState("");
   const router = useRouter();
@@ -96,4 +96,4 @@ const pageMapData: FC = () => {
   );
 };
 
-export default pageMapData;
+export default PageMapData;
