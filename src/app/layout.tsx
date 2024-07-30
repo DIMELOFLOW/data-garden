@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { FileUrlContextProvider } from "@/context/FileUrlContext";
+import { DataArchiveContextProvider } from "@/context/DataArchiveContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <FileUrlContextProvider>{children}</FileUrlContextProvider>
+        <DataArchiveContextProvider>
+          <FileUrlContextProvider>{children}</FileUrlContextProvider>
+        </DataArchiveContextProvider>
       </body>
     </html>
   );

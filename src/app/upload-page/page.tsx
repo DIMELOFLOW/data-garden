@@ -2,26 +2,13 @@
 
 import { FC, useEffect, useState } from "react";
 
-import Link from "next/link";
-
-import Button from "@mui/material/Button";
-import { NextButton } from "@components";
+import { NextButton, BackButton } from "@components";
 import { UploadFiles } from "./components/";
 import { useCheckLocalStorageAndRedirect } from "@/hooks/checkLocalStorage";
 import { Constants, localStorage } from "@helpers";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 const { clearLocalStorage } =localStorage;
-
-const BackButton = () => (
-  <div className="container">
-    <Link href="/">
-      <Button variant="outlined" color="warning" onClick={clearLocalStorage}>
-        BACK
-      </Button>
-    </Link>
-  </div>
-);
 
 const UploadPage: FC = () => {
   const [validFile, setValidFile] = useState<boolean>(false);
@@ -56,10 +43,10 @@ const UploadPage: FC = () => {
         />
       </div>
       <div className="containerButton">
-        <BackButton />
+        <BackButton path="/" onClick={clearLocalStorage}/>
         <NextButton
           {...{
-            path: "/ready-file",
+            path: "/map-data",
             disabled: !validFile || loading,
           }}
         />
