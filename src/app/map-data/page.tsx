@@ -56,7 +56,7 @@ const PageMapData: FC = () => {
       if (selectedFormatRight === "JSON") {
         const result = getHeadersWithTypesJson(displayContent);
         if (result === null) {
-          console.error("No se pudo obtener los encabezados del JSON");
+          console.error("Could not get JSON headers");
         } else {
           const { headersWithType, headersEqualToName } = result;
           setJsonAndCsvPatterns(
@@ -72,7 +72,7 @@ const PageMapData: FC = () => {
       } else {
         const result = getHeadersWithTypesCsv(displayContent);
         if (typeof result === "string") {
-          console.error("eerpr", result);
+          console.error("Could not get CSV headers");
         } else {
           const { csvWithTypes, csvEqualToName } = result;
           setJsonAndCsvPatterns(csvWithTypes);
