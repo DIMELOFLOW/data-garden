@@ -20,16 +20,38 @@ function getNestedHeadersWithTypes(
     } else if (typeof value === "object" && value !== null) {
       Object.assign(headers, getNestedHeadersWithTypes(value, fullKey));
     } else {
-      headers[fullKey] = typeof value;
+      headers[fullKey] = typeof fullKey;
     }
   }
 
   return headers;
 }
 
-export function getHeadersWithTypesJson(
-  dataArchive: string
-): { [key: string]: string } | null {
+function getNestedHeadersEqualToName(
+  obj: DataObject,
+  prefix: string = ""
+): { [key: string]: string } {
+  const headers: { [key: string]: string } = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    const fullKey = prefix ? `${prefix}.${key}` : key;
+
+    if (Array.isArray(value)) {
+      headers[fullKey] = fullKey;
+    } else if (typeof value === "object" && value !== null) {
+      Object.assign(headers, getNestedHeadersEqualToName(value, fullKey));
+    } else {
+      headers[fullKey] = fullKey;
+    }
+  }
+
+  return headers;
+}
+
+export function getHeadersWithTypesJson(dataArchive: string): {
+  headersWithType: { [key: string]: string };
+  headersEqualToName: { [key: string]: string };
+} | null {
   if (!dataArchive) {
     return null;
   }
@@ -43,14 +65,17 @@ export function getHeadersWithTypesJson(
     return null;
   }
 
-  const allHeaders: { [key: string]: string } = {};
+  const headersWithType: { [key: string]: string } = {};
+  const headersEqualToName: { [key: string]: string } = {};
 
   dataArray.forEach((dataObject) => {
-    const headers = getNestedHeadersWithTypes(dataObject);
-    Object.assign(allHeaders, headers);
+    const headersWithTypeObj = getNestedHeadersWithTypes(dataObject);
+    Object.assign(headersWithType, headersWithTypeObj);
+
+    Object.assign(headersEqualToName, getNestedHeadersEqualToName(dataObject));
   });
 
-  return allHeaders;
+  return { headersWithType, headersEqualToName };
 }
 
 function inferDataType(value: any): string | number | boolean {
@@ -66,7 +91,9 @@ function inferDataType(value: any): string | number | boolean {
   }
 }
 
-export function getHeadersWithTypesCsv(csvString: string): string {
+export function getHeadersWithTypesCsv(
+  csvString: string
+): { csvWithTypes: string; csvEqualToName: string } | string {
   try {
     const rows: Array<any[]> = csvString
       .split("\n")
@@ -83,14 +110,20 @@ export function getHeadersWithTypesCsv(csvString: string): string {
 
     const headerNames = headerRow.map((value) => value.toString()).join(",");
 
-    const csv = headerRow
+    const csvWithTypes = headerRow
       .map(
         (value: string, index: number) =>
           `${headerNames.split(",")[index]}: ${typeof inferDataType(value)}`
       )
       .join(", ");
 
-    return csv;
+    const csvEqualToName = headerRow
+      .map(
+        (value: string, index: number) =>
+          `${headerNames.split(",")[index]}: ${headerNames.split(",")[index]}`
+      )
+      .join(", ");
+    return { csvWithTypes, csvEqualToName };
   } catch (err) {
     console.error("Error al extraer el encabezado:", err);
     return "";

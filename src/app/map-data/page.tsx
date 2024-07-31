@@ -11,6 +11,7 @@ import {
   getHeadersWithTypesCsv,
   getHeadersWithTypesJson,
 } from "./libs/extract-pattern";
+import MonacoEditor, { OnChange } from "@monaco-editor/react";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 const { clearLocalStorage } = localStorage;
@@ -22,10 +23,12 @@ const PageMapData: FC = () => {
   const [selectedFormatRight, setSelectedFormatRight] = useState("");
   const router = useRouter();
   const [jsonAndCsvPatterns, setJsonAndCsvPatterns] = useState<string>("");
+  const [value, setValue] = useState<string>("");
 
   const clearLocalStoreArchive = () => {
     setDataArchive(null);
     clearLocalStorage();
+    setValue("");
   };
 
   const convertArrayBufferToString = (buffer: ArrayBuffer): string => {
@@ -51,18 +54,39 @@ const PageMapData: FC = () => {
           : dataArchive || "";
 
       if (selectedFormatRight === "JSON") {
-        setJsonAndCsvPatterns(
-          JSON.stringify(
-            getHeadersWithTypesJson(displayContent),
+        const result = getHeadersWithTypesJson(displayContent);
+        if (result === null) {
+          console.error("No se pudo obtener los encabezados del JSON");
+        } else {
+          const { headersWithType, headersEqualToName } = result;
+          setJsonAndCsvPatterns(
+            JSON.stringify(headersWithType, null, Constants.INDENTATION_LEVEL)
+          );
+          const a = JSON.stringify(
+            headersEqualToName,
             null,
             Constants.INDENTATION_LEVEL
-          )
-        );
+          );
+          setValue(a);
+        }
       } else {
-        setJsonAndCsvPatterns(getHeadersWithTypesCsv(displayContent));
+        const result = getHeadersWithTypesCsv(displayContent);
+        if (typeof result === "string") {
+          console.error("eerpr", result);
+        } else {
+          const { csvWithTypes, csvEqualToName } = result;
+          setJsonAndCsvPatterns(csvWithTypes);
+          setValue(csvEqualToName);
+        }
       }
     }
   }, [dataArchive, router, selectedFormatRight]);
+
+  const handleEditorChange: OnChange = (newValue, ev) => {
+    if (typeof newValue === "string") {
+      setValue(newValue);
+    }
+  };
 
   return (
     <div className="containerMapData">
@@ -81,7 +105,12 @@ const PageMapData: FC = () => {
           <div className="contentLeftRight">
             <h1 className="titlee">Remap Your Data</h1>
             <div className="archiveContainer">
-              <textarea style={{ width: "100%", height: "100%" }}> </textarea>
+              <MonacoEditor
+                theme="vs-dark"
+                language="javascript"
+                value={value}
+                onChange={handleEditorChange}
+              />
             </div>
           </div>
           <NextButton
