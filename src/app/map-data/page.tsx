@@ -11,6 +11,7 @@ import {
   getHeadersWithTypesCsv,
   getHeadersWithTypesJson,
 } from "./libs/extract-pattern";
+import MonacoEditor, { OnChange } from "@monaco-editor/react";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 const { clearLocalStorage } = localStorage;
@@ -21,11 +22,13 @@ const PageMapData: FC = () => {
   const { dataArchive, setDataArchive } = useDataArchiveContext();
   const [selectedFormatRight, setSelectedFormatRight] = useState("");
   const router = useRouter();
-  const [jsonAndCsvPatterns, setJsonAndCsvPatterns] = useState<string>("");
+  const [filePatterns, setFilePatterns] = useState<string>("");
+  const [editorText, setEditorText] = useState<string>("");
 
   const clearLocalStoreArchive = () => {
     setDataArchive(null);
     clearLocalStorage();
+    setEditorText("");
   };
 
   const convertArrayBufferToString = (buffer: ArrayBuffer): string => {
@@ -51,18 +54,39 @@ const PageMapData: FC = () => {
           : dataArchive || "";
 
       if (selectedFormatRight === "JSON") {
-        setJsonAndCsvPatterns(
-          JSON.stringify(
-            getHeadersWithTypesJson(displayContent),
+        const result = getHeadersWithTypesJson(displayContent);
+        if (result === null) {
+          console.error("Could not get JSON headers");
+        } else {
+          const { headersWithType, headersEqualToName } = result;
+          setFilePatterns(
+            JSON.stringify(headersWithType, null, Constants.INDENTATION_LEVEL)
+          );
+          const jsonStringifiedHeaders = JSON.stringify(
+            headersEqualToName,
             null,
             Constants.INDENTATION_LEVEL
-          )
-        );
+          );
+          setEditorText(jsonStringifiedHeaders);
+        }
       } else {
-        setJsonAndCsvPatterns(getHeadersWithTypesCsv(displayContent));
+        const result = getHeadersWithTypesCsv(displayContent);
+        if (result === null) {
+          console.error("Could not get CSV headers");
+        } else {
+          const { csvWithTypes, csvEqualToName } = result;
+          setFilePatterns(csvWithTypes);
+          setEditorText(csvEqualToName);
+        }
       }
     }
   }, [dataArchive, router, selectedFormatRight]);
+
+  const handleEditorChange: OnChange = (newValue) => {
+    if (typeof newValue === "string") {
+      setEditorText(newValue);
+    }
+  };
 
   return (
     <div className="containerMapData">
@@ -71,7 +95,7 @@ const PageMapData: FC = () => {
           <div className="contentLeftRight">
             <h1 className="titlee">Your File {selectedFormatRight}</h1>
             <div className="archiveContainer">
-              <pre>{jsonAndCsvPatterns}</pre>
+              <pre>{filePatterns}</pre>
             </div>
           </div>
           <BackButton path="/" onClick={clearLocalStoreArchive} />
@@ -81,7 +105,12 @@ const PageMapData: FC = () => {
           <div className="contentLeftRight">
             <h1 className="titlee">Remap Your Data</h1>
             <div className="archiveContainer">
-              <textarea style={{ width: "100%", height: "100%" }}> </textarea>
+              <MonacoEditor
+                theme="vs-dark"
+                language="javascript"
+                value={editorText}
+                onChange={handleEditorChange}
+              />
             </div>
           </div>
           <NextButton
