@@ -22,13 +22,13 @@ const PageMapData: FC = () => {
   const { dataArchive, setDataArchive } = useDataArchiveContext();
   const [selectedFormatRight, setSelectedFormatRight] = useState("");
   const router = useRouter();
-  const [jsonAndCsvPatterns, setJsonAndCsvPatterns] = useState<string>("");
-  const [value, setValue] = useState<string>("");
+  const [filePatterns, setFilePatterns] = useState<string>("");
+  const [editorText, setEditorText] = useState<string>("");
 
   const clearLocalStoreArchive = () => {
     setDataArchive(null);
     clearLocalStorage();
-    setValue("");
+    setEditorText("");
   };
 
   const convertArrayBufferToString = (buffer: ArrayBuffer): string => {
@@ -59,32 +59,32 @@ const PageMapData: FC = () => {
           console.error("Could not get JSON headers");
         } else {
           const { headersWithType, headersEqualToName } = result;
-          setJsonAndCsvPatterns(
+          setFilePatterns(
             JSON.stringify(headersWithType, null, Constants.INDENTATION_LEVEL)
           );
-          const a = JSON.stringify(
+          const jsonStringifiedHeaders = JSON.stringify(
             headersEqualToName,
             null,
             Constants.INDENTATION_LEVEL
           );
-          setValue(a);
+          setEditorText(jsonStringifiedHeaders);
         }
       } else {
         const result = getHeadersWithTypesCsv(displayContent);
-        if (typeof result === "string") {
+        if (result === null) {
           console.error("Could not get CSV headers");
         } else {
           const { csvWithTypes, csvEqualToName } = result;
-          setJsonAndCsvPatterns(csvWithTypes);
-          setValue(csvEqualToName);
+          setFilePatterns(csvWithTypes);
+          setEditorText(csvEqualToName);
         }
       }
     }
   }, [dataArchive, router, selectedFormatRight]);
 
-  const handleEditorChange: OnChange = (newValue, ev) => {
+  const handleEditorChange: OnChange = (newValue) => {
     if (typeof newValue === "string") {
-      setValue(newValue);
+      setEditorText(newValue);
     }
   };
 
@@ -95,7 +95,7 @@ const PageMapData: FC = () => {
           <div className="contentLeftRight">
             <h1 className="titlee">Your File {selectedFormatRight}</h1>
             <div className="archiveContainer">
-              <pre>{jsonAndCsvPatterns}</pre>
+              <pre>{filePatterns}</pre>
             </div>
           </div>
           <BackButton path="/" onClick={clearLocalStoreArchive} />
@@ -108,7 +108,7 @@ const PageMapData: FC = () => {
               <MonacoEditor
                 theme="vs-dark"
                 language="javascript"
-                value={value}
+                value={editorText}
                 onChange={handleEditorChange}
               />
             </div>

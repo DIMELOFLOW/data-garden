@@ -91,15 +91,16 @@ function inferDataType(value: any): string | number | boolean {
   }
 }
 
-export function getHeadersWithTypesCsv(
-  csvString: string
-): { csvWithTypes: string; csvEqualToName: string } | string {
+export function getHeadersWithTypesCsv(csvString: string): {
+  csvWithTypes: string;
+  csvEqualToName: string;
+} | null {
   try {
     const rows: Array<any[]> = csvString
       .split("\n")
       .map((line) => line.split(",").map(inferDataType));
 
-    if (rows.length === 0) return "";
+    if (rows.length === 0) return null;
 
     const headerRow = rows[0];
 
@@ -126,6 +127,6 @@ export function getHeadersWithTypesCsv(
     return { csvWithTypes, csvEqualToName };
   } catch (err) {
     console.error("Error al extraer el encabezado:", err);
-    return "";
+    return null;
   }
 }
