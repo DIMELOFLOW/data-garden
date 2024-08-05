@@ -92,8 +92,8 @@ function inferDataType(value: any): string | number | boolean {
 }
 
 export function getHeadersWithTypesCsv(csvString: string): {
-  csvWithTypes: string;
-  csvEqualToName: string;
+  csvWithTypes: Record<string, string>;
+  csvEqualToName: Record<string, string>;
 } | null {
   try {
     const rows: Array<any[]> = csvString
@@ -104,26 +104,15 @@ export function getHeadersWithTypesCsv(csvString: string): {
 
     const headerRow = rows[0];
 
-    const header: { [key: string]: string } = {};
+    const csvWithTypes: Record<string, string> = {};
+    const csvEqualToName: Record<string, string> = {};
+
     headerRow.forEach((value: string, index: number) => {
-      header[`Column${index + 1}`] = typeof value;
+      const headerName = value;
+      csvWithTypes[headerName] = typeof inferDataType(value);
+      csvEqualToName[headerName] = headerName;
     });
 
-    const headerNames = headerRow.map((value) => value.toString()).join(",");
-
-    const csvWithTypes = headerRow
-      .map(
-        (value: string, index: number) =>
-          `${headerNames.split(",")[index]}: ${typeof inferDataType(value)}`
-      )
-      .join(", ");
-
-    const csvEqualToName = headerRow
-      .map(
-        (value: string, index: number) =>
-          `${headerNames.split(",")[index]}: ${headerNames.split(",")[index]}`
-      )
-      .join(", ");
     return { csvWithTypes, csvEqualToName };
   } catch (err) {
     console.error("Error al extraer el encabezado:", err);

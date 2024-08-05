@@ -3,7 +3,7 @@
 import React, { FC, useState, useEffect } from "react";
 import "./style/index.css";
 
-import { BackButton, NextButton } from "@/components";
+import { BackButton, NextButtonMapData } from "@/components";
 import { useDataArchiveContext } from "@/context/DataArchiveContext";
 import { Constants, localStorage } from "@helpers";
 import { useRouter } from "next/navigation";
@@ -12,11 +12,10 @@ import {
   getHeadersWithTypesJson,
 } from "./libs/extract-pattern";
 import MonacoEditor, { OnChange } from "@monaco-editor/react";
+import { validateMappingEditorCode } from "./libs/validate-file-code-editor";
 
 const { FILE_SELECTED_FORMATS } = Constants;
 const { clearLocalStorage } = localStorage;
-
-const buttonDisable = false;
 
 const PageMapData: FC = () => {
   const { dataArchive, setDataArchive } = useDataArchiveContext();
@@ -75,8 +74,12 @@ const PageMapData: FC = () => {
           console.error("Could not get CSV headers");
         } else {
           const { csvWithTypes, csvEqualToName } = result;
-          setFilePatterns(csvWithTypes);
-          setEditorText(csvEqualToName);
+          setFilePatterns(
+            JSON.stringify(csvWithTypes, null, Constants.INDENTATION_LEVEL)
+          );
+          setEditorText(
+            JSON.stringify(csvEqualToName, null, Constants.INDENTATION_LEVEL)
+          );
         }
       }
     }
@@ -85,6 +88,17 @@ const PageMapData: FC = () => {
   const handleEditorChange: OnChange = (newValue) => {
     if (typeof newValue === "string") {
       setEditorText(newValue);
+    }
+  };
+
+  const validateEditorCode = (): void => {
+    try {
+      const mapping = JSON.parse(editorText);
+      validateMappingEditorCode(JSON.parse(filePatterns), mapping);
+      return router.push("/ready-file");
+    } catch (error: unknown) {
+      const err = error as Error;
+      alert("An error occurred: " + err.message);
     }
   };
 
@@ -113,12 +127,7 @@ const PageMapData: FC = () => {
               />
             </div>
           </div>
-          <NextButton
-            {...{
-              path: "/ready-file",
-              disabled: !buttonDisable,
-            }}
-          />
+          <NextButtonMapData onClick={validateEditorCode} />
         </div>
       </div>
     </div>
